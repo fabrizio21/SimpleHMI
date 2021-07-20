@@ -1,0 +1,205 @@
+﻿<UserControl x:Class="SimpleHMI.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             xmlns:prismEvt="clr-namespace:Prism.Events;assembly=Prism"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:SettingsPageViewModel, IsDesignTimeCreatable=True}" 
+             xmlns:val="clr-namespace:SimpleHMI.Validation"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             x:Name="myUC">
+    <UserControl.Resources>
+        <val:SettingsValidationRule x:Key="SettingsValidationRule"></val:SettingsValidationRule>
+        <conv:ReverseBooleanConverter x:Key="ReverseBooleanConverter"></conv:ReverseBooleanConverter>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid Grid.Row="0" Grid.ColumnSpan="3"
+              AlternationCount="2"
+              ItemsSource="{Binding Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+              AutoGenerateColumns="False" 
+              CanUserAddRows="False"
+                  GridLinesVisibility="Horizontal" Margin="20"
+              RowStyle="{StaticResource RowStyleWithAlternation}"
+              BorderBrush="Gray"
+              BorderThickness="1"
+              VirtualizingStackPanel.VirtualizationMode="Standard"
+              VirtualizingStackPanel.IsVirtualizing="True">
+            <!--
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsVisible, Converter={StaticResource hiddenConverter}}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+-->
+            <DataGrid.Columns>
+
+                <!-- Name/Description column -->
+                <DataGridTemplateColumn Width="1*" MaxWidth="400" IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Name], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Name}"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding Description}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Current value column -->
+                <DataGridTemplateColumn IsReadOnly="True" Width="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Current], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Current}"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Tag[var0].Value, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Set value column -->
+                <DataGridTemplateColumn Width="120" IsReadOnly="False">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Set], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Set}"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Value, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" 
+                                IsEnabled="{Binding IsReadOnly, Converter={StaticResource ReverseBooleanConverter}}">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="LostFocus">
+                                        <b:InvokeCommandAction Command="{Binding ElementName=myUC, Path=DataContext.SaveSettingsCommand}" 
+                                                        CommandParameter="{Binding}" />
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                                <!--
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding ElementName=myUC, Path=DataContext.SaveSettingsCommand}" CommandParameter="{Binding}"/>
+                        </TextBox.InputBindings>
+                        -->
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Unit of measure column -->
+                <DataGridTemplateColumn Width="80" MaxWidth="80" IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[UnitOfMeasure], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=U.M.}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding UnitMeasure}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Min value column -->
+                <DataGridTemplateColumn Width="80" MaxWidth="80" IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Min], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Min}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding MinValue}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Max value column -->
+                <DataGridTemplateColumn Width="80" MaxWidth="80" IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Max], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Min}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding MaxValue}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Default value save column -->
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Default], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Default}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="36" Margin="5" Command="{Binding ElementName=myUC, Path=DataContext.SaveDefaultValueCommand}" CommandParameter="{Binding}"
+                                    IsEnabled="{Binding IsReadOnly, Converter={StaticResource ReverseBooleanConverter}}">
+                                <materialDesign:PackIcon Kind="Restore" Width="16" Height="16" />
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Default value column -->
+                <DataGridTemplateColumn Width="80" MaxWidth="80" IsReadOnly="True">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DataContext.Translation[Default], RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}, FallbackValue=Default}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Default}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <!-- Pages navigation -->
+        <Button Grid.Row="1" Grid.Column="0" Command="{Binding PreviousPageCommand}" Width="60" HorizontalAlignment="Right" IsEnabled="{Binding CanMovePrev}">
+            <materialDesign:PackIcon Kind="ArrowLeft" />
+        </Button>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding CurrentPage}" VerticalAlignment="Center"/>
+            <Label Content="/" />
+            <TextBlock Text="{Binding NumPages}" VerticalAlignment="Center" />
+        </StackPanel>
+        <Button Grid.Row="1" Grid.Column="2" Command="{Binding NextPageCommand}" Width="60" HorizontalAlignment="Left" IsEnabled="{Binding CanMoveNext}">
+            <materialDesign:PackIcon Kind="ArrowRight" />
+        </Button>
+
+    </Grid>
+</UserControl>

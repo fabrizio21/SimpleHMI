@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SimpleHMI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Language" Type="System.String" Scope="User">
+      <Value Profile="(Default)">it-it</Value>
+    </Setting>
+    <Setting Name="LocalDBConnection2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=.\Hmi.db;Version=3</Value>
+    </Setting>
+    <Setting Name="LocalDBConnection" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=(local)\sqlexpress;Initial Catalog=W000323;User ID=sa;Password=T0d3m@!</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

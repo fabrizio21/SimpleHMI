@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Data;
+
+namespace SimpleHMI.Converters
+{
+    /// <summary>
+    /// Int ref selection mode: from 0 -> SINE_WAVE, 1 -> LIN_SWEEP, 2 -> CONST_OFFSET 
+    /// </summary>
+    public class IntRefModeToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int val = (int)value;
+            string retVal = string.Empty;
+
+            switch (val) {
+                case 0: retVal = "SINE_WAVE";      break;
+                case 1: retVal = "LIN_SWEEP";       break;
+                case 2: retVal = "CONST_OFFSET";    break;
+            }
+            return retVal;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+            return null;
+        }
+    }
+}

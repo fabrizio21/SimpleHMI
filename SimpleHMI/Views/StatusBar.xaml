@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="SimpleHMI.Views.StatusBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:StatusBarViewModel, IsDesignTimeCreatable=True}"
+             BorderBrush="Gainsboro" BorderThickness="0,1,0,1" Width="Auto">
+
+    <UserControl.Resources>
+        <conv:ConnectionStatusToColorConverter x:Key="ConnectionStatusToColorConverter"></conv:ConnectionStatusToColorConverter>
+    </UserControl.Resources>
+    <StatusBar HorizontalAlignment="Left" Padding="3" Grid.RowSpan="2" Width="Auto">
+        <StatusBarItem>
+            <TextBlock Text="{Binding T[ConnectionStatus],FallbackValue='Connection status:'}" VerticalAlignment="Center" Foreground="Black"/>
+        </StatusBarItem>
+        <StatusBarItem>
+            <Ellipse Width="12" Height="12" Fill="{Binding ConnectionStatus,Converter={StaticResource ConnectionStatusToColorConverter}}" Stroke="Black" />
+        </StatusBarItem>
+        <Separator />
+        <StatusBarItem>
+            <TextBlock Text="{Binding T[ScanTime],FallbackValue='Scan time:'}" VerticalAlignment="Center"  Foreground="Black"/>
+        </StatusBarItem>
+        <StatusBarItem>
+            <TextBlock Text="{Binding ScanTime}" VerticalAlignment="Center"  Foreground="Black"/>
+        </StatusBarItem>
+        <Separator />
+    </StatusBar>
+</UserControl>

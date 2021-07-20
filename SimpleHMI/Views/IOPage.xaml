@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="SimpleHMI.Views.IOPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:ctrls="clr-namespace:SimpleHMI.Controls"
+             
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:FakeViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <conv:IOToColorConverter x:Key="IOToColorConverter" />
+    </UserControl.Resources>
+    <ctrls:IOController />
+</UserControl>

@@ -1,0 +1,226 @@
+﻿<UserControl x:Class="SimpleHMI.Controls.ExtRefModePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             Padding="10"
+             Background="White" Height="Auto"
+             BorderBrush="LightGray" BorderThickness="1">
+    <UserControl.Resources>
+        <conv:BitwiseConverter x:Key="BitwiseConverter" />
+        <conv:IntToBoolConverter x:Key="IntToBoolConverter" />
+        <conv:SyncStateToStringConverter x:Key="SyncStateToStringConverter" />
+        <conv:ExtRefModeToStringConverter x:Key="ExtRefModeToStringConverter" />
+        <conv:ExtRefStopModeToStringConverter x:Key="ExtRefStopModeToStringConverter" />
+        <conv:BoolToIntConverter x:Key="BoolToIntConverter" />
+        <conv:PrivilegeToBooleanConverter x:Key="PrivilegeToBooleanConverter" />
+
+        <x:Array x:Key="ParametersArray" Type="sys:String">
+            <sys:String>FOLLOW DIGITAL SIGNAL</sys:String>
+            <sys:String>FOLLOW ANALOG SIGNAL</sys:String>
+            <sys:String>EXECUTE MEMORY TASK</sys:String>
+        </x:Array>
+
+        <x:Array x:Key="StopModeParametersArray" Type="sys:String">
+            <sys:String>Stop at zero</sys:String>
+            <sys:String>Stop at rest position</sys:String>
+            <sys:String>Stop at home</sys:String>
+        </x:Array>
+    </UserControl.Resources>
+    <Grid Height="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition>
+                <ColumnDefinition.Style>
+                    <Style TargetType="ColumnDefinition">
+                        <Setter Property="Width" Value="180" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Security.CurrentUser.Level, Converter={StaticResource PrivilegeToBooleanConverter}, ConverterParameter=1}" Value="False">
+                                <Setter Property="Width" Value="0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ColumnDefinition.Style>
+            </ColumnDefinition>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="{Binding Translation[Axis],FallbackValue='Axis'}" Grid.Row="0" Grid.Column="0" Style="{StaticResource GridHeader}"/>
+        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="{Binding Translation[Status],FallbackValue='Status'}" Grid.Row="0" Grid.Column="1" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderCell}" />
+        
+        <TextBlock Text="{Binding Translation[Start],FallbackValue='Start'}" Grid.Row="0" Grid.Column="2" Style="{StaticResource GridHeader}"/>
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="{Binding Translation[Pause],FallbackValue='Pause'}" Grid.Row="0" Grid.Column="3" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderCell}" />
+        
+        <TextBlock Text="{Binding Translation[Mode],FallbackValue='Mode'}" Grid.Row="0" Grid.Column="4" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="{Binding Translation[Mode],FallbackValue='Mode'}" Grid.Row="0" Grid.Column="5" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderCell}" />
+        <Border Grid.Row="0" Grid.Column="6" Style="{StaticResource BorderCell}" />
+        <Border Grid.Row="0" Grid.Column="7" Style="{StaticResource BorderCell}" />
+
+
+        <!-- Table -->
+        <CheckBox Grid.Row="1" Grid.Column="0" Style="{StaticResource AxisCheckBox}" Content="X" 
+                  IsChecked="{Binding AxisList.A0.EXT_REF_activeAxis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Command="{Binding ExtRefXSelectionChangedCommand}" CommandParameter="{Binding AxisList.A0.EXT_REF_activeAxis, Converter={StaticResource BoolToIntConverter}}"/>
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource BorderCell}" />
+
+        <CheckBox Grid.Row="2" Grid.Column="0" Style="{StaticResource AxisCheckBox}" Content="Y" 
+                  IsChecked="{Binding AxisList.A1.EXT_REF_activeAxis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Command="{Binding ExtRefYSelectionChangedCommand}" CommandParameter="{Binding AxisList.A1.EXT_REF_activeAxis, Converter={StaticResource BoolToIntConverter}}"/>
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource BorderCell}" />
+        
+        <CheckBox Grid.Row="3" Grid.Column="0" Style="{StaticResource AxisCheckBox}" Content="Rot" 
+                  IsChecked="{Binding AxisList.A2.EXT_REF_activeAxis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Command="{Binding ExtRefRotSelectionChangedCommand}" CommandParameter="{Binding AxisList.A2.EXT_REF_activeAxis, Converter={StaticResource BoolToIntConverter}}"/>
+        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource BorderCell}" />
+        
+        <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="5">
+            <TextBlock.Text>
+                <MultiBinding TargetNullValue="" FallbackValue="">
+                    <MultiBinding.Converter>
+                        <conv:SyncStateToStringConverter/>
+                    </MultiBinding.Converter>
+                    <Binding Path="Translation"/>
+                    <Binding Path="AxisList.A0.EXT_REF_syncState"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="5">
+            <TextBlock.Text>
+                <MultiBinding TargetNullValue="" FallbackValue="">
+                    <MultiBinding.Converter>
+                        <conv:SyncStateToStringConverter/>
+                    </MultiBinding.Converter>
+                    <Binding Path="Translation"/>
+                    <Binding Path="AxisList.A1.EXT_REF_syncState"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="5">
+            <TextBlock.Text>
+                <MultiBinding TargetNullValue="" FallbackValue="">
+                    <MultiBinding.Converter>
+                        <conv:SyncStateToStringConverter/>
+                    </MultiBinding.Converter>
+                    <Binding Path="Translation"/>
+                    <Binding Path="AxisList.A2.EXT_REF_syncState"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+        <Button Style="{StaticResource btnRounded}" Grid.Row="1" Grid.Column="2" Width="48" HorizontalAlignment="Center"
+                Command="{Binding ExtRefAxisStartCommand}" CommandParameter="0"
+                IsEnabled="{Binding AxisList.A0.EXT_REF_activeAxis}">
+            <materialDesign:PackIcon Kind="Play" />
+        </Button>
+        <Button Style="{StaticResource btnRounded}" Grid.Row="1" Grid.Column="3" Width="48" HorizontalAlignment="Center"
+                Command="{Binding ExtRefAxisPauseCommand}" CommandParameter="0"
+                IsEnabled="{Binding AxisList.A0.EXT_REF_activeAxis}">
+            <materialDesign:PackIcon Kind="Pause" />
+        </Button>
+
+        <Button Style="{StaticResource btnRounded}" Grid.Row="2" Grid.Column="2" Width="48" HorizontalAlignment="Center"
+                Command="{Binding ExtRefAxisStartCommand}" CommandParameter="1"
+                IsEnabled="{Binding AxisList.A1.EXT_REF_activeAxis}">
+            <materialDesign:PackIcon Kind="Play" />
+        </Button>
+        <Button Style="{StaticResource btnRounded}" Grid.Row="2" Grid.Column="3" Width="48" HorizontalAlignment="Center"
+                Command="{Binding ExtRefAxisPauseCommand}" CommandParameter="1"
+                IsEnabled="{Binding AxisList.A1.EXT_REF_activeAxis}">
+            <materialDesign:PackIcon Kind="Pause" />
+        </Button>
+
+        <Button Style="{StaticResource btnRounded}" Grid.Row="3" Grid.Column="2" Width="48" HorizontalAlignment="Center"
+                Command="{Binding ExtRefAxisStartCommand}" CommandParameter="2"
+                IsEnabled="{Binding AxisList.A2.EXT_REF_activeAxis}">
+            <materialDesign:PackIcon Kind="Play" />
+        </Button>
+        <Button Style="{StaticResource btnRounded}" Grid.Row="3" Grid.Column="3" Width="48" HorizontalAlignment="Center"
+                Command="{Binding ExtRefAxisPauseCommand}" CommandParameter="2"
+                IsEnabled="{Binding AxisList.A2.EXT_REF_activeAxis}">
+            <materialDesign:PackIcon Kind="Pause" />
+        </Button>
+
+
+        <!-- Column 4 -->
+        <ComboBox ItemsSource="{StaticResource ParametersArray}" Grid.Row="2" Grid.Column="4" Margin="10" Width="Auto" SelectedIndex="{Binding ExtRefSelectedMode}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="SelectionChanged">
+                    <prism:InvokeCommandAction Command="{Binding ExtRefModeSelectionChangedCommand}" 
+                                               CommandParameter="{Binding ExtRefSelectedMode, Converter={StaticResource ExtRefModeToStringConverter}}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ComboBox>
+        <Border Grid.Row="1" Grid.Column="4" Grid.RowSpan="3" Style="{StaticResource BorderCell}" />
+
+        <!-- Column 5 -->
+        <ComboBox ItemsSource="{StaticResource StopModeParametersArray}" Grid.Row="1" Grid.Column="5" Margin="10" Width="Auto" SelectedIndex="{Binding ExtRefXStopModeSelected}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="SelectionChanged">
+                    <prism:InvokeCommandAction Command="{Binding ExtRefXStopModeSelectionChangedCommand}" 
+                                               CommandParameter="{Binding ExtRefXStopModeSelected, Converter={StaticResource ExtRefStopModeToStringConverter}}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ComboBox>
+        <Border Grid.Row="1" Grid.Column="5" Style="{StaticResource BorderCell}" />
+
+        <ComboBox ItemsSource="{StaticResource StopModeParametersArray}" Grid.Row="2" Grid.Column="5" Margin="10" Width="Auto" SelectedIndex="{Binding ExtRefYStopModeSelected}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="SelectionChanged">
+                    <prism:InvokeCommandAction Command="{Binding ExtRefYStopModeSelectionChangedCommand}" 
+                                               CommandParameter="{Binding ExtRefYStopModeSelected, Converter={StaticResource ExtRefStopModeToStringConverter}}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ComboBox>
+        <Border Grid.Row="2" Grid.Column="5" Style="{StaticResource BorderCell}" />
+
+        <ComboBox ItemsSource="{StaticResource StopModeParametersArray}" Grid.Row="3" Grid.Column="5" Margin="10" Width="Auto" SelectedIndex="{Binding ExtRefRotStopModeSelected}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="SelectionChanged">
+                    <prism:InvokeCommandAction Command="{Binding ExtRefRotStopModeSelectionChangedCommand}" 
+                                               CommandParameter="{Binding ExtRefRotStopModeSelected, Converter={StaticResource ExtRefStopModeToStringConverter}}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ComboBox>
+        <Border Grid.Row="3" Grid.Column="5" Style="{StaticResource BorderCell}" />
+
+        <Button Style="{StaticResource btnRounded}" Grid.RowSpan="4" Grid.Column="6" HorizontalAlignment="Center" Height="60" Width="80"
+                Command="{Binding ExtRefGlobalStartCommand}">
+            <TextBlock Text="{Binding Translation[Start],FallbackValue=Start}" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+        </Button>
+        <Border Grid.Row="1" Grid.Column="6" Grid.RowSpan="3" Style="{StaticResource BorderCell}" />
+
+        <Button Style="{StaticResource btnRounded}" Grid.RowSpan="4" Grid.Column="7" HorizontalAlignment="Center" Height="60" Width="80"
+                Command="{Binding ExtRefGlobalPauseCommand}">
+            <TextBlock Text="{Binding Translation[Pause],FallbackValue=Pause}" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+        </Button>
+        <Border Grid.Row="1" Grid.Column="7" Grid.RowSpan="3" Style="{StaticResource BorderCell}" />
+
+        <Border BorderBrush="LightGray" Grid.RowSpan="4" Grid.ColumnSpan="8" BorderThickness="1"/>
+    </Grid>
+</UserControl>

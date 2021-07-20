@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HMIModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Alarms">
+          <Key>
+            <PropertyRef Name="IDString" />
+          </Key>
+          <Property Name="IDString" Type="int" Nullable="false" />
+          <Property Name="IDTag" Type="int" Nullable="false" />
+          <Property Name="Bit" Type="int" />
+        </EntityType>
+        <EntityType Name="DataTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Languages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <!--Errori trovati durante la generazione:
+avviso 6002: Nessuna chiave primaria definita per la tabella/visualizzazione 'W000323.dbo.Profiles'. La chiave è stata dedotta e la definizione è stata creata come tabella/visualizzazione di sola lettura.-->
+        <EntityType Name="Profiles">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Level" />
+            <PropertyRef Name="Mask" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Level" Type="int" Nullable="false" />
+          <Property Name="Mask" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Settings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Value" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IDType" Type="int" Nullable="false" />
+          <Property Name="Min" Type="float" />
+          <Property Name="Max" Type="float" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="UM" Type="varchar" MaxLength="10" />
+          <Property Name="ReadOnly" Type="bit" Nullable="false" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="WriteToPlc" Type="bit" />
+          <Property Name="Format" Type="varchar" MaxLength="20" />
+          <Property Name="IDCategory" Type="int" />
+          <Property Name="Criteria" Type="varchar" MaxLength="100" />
+          <Property Name="DefaultValue" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Strings">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IT" Type="nvarchar(max)" />
+          <Property Name="EN" Type="nvarchar(max)" />
+          <Property Name="local" Type="nvarchar(max)" />
+          <Property Name="local2" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Tags">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Variable" Type="varchar" MaxLength="50" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Size" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errori trovati durante la generazione:
+avviso 6002: Nessuna chiave primaria definita per la tabella/visualizzazione 'W000323.dbo.TranslationMaster'. La chiave è stata dedotta e la definizione è stata creata come tabella/visualizzazione di sola lettura.-->
+        <EntityType Name="TranslationMaster">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errori trovati durante la generazione:
+avviso 6002: Nessuna chiave primaria definita per la tabella/visualizzazione 'W000323.dbo.Translations'. La chiave è stata dedotta e la definizione è stata creata come tabella/visualizzazione di sola lettura.-->
+        <EntityType Name="Translations">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="IDLanguage" />
+            <PropertyRef Name="IDString" />
+            <PropertyRef Name="Text" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDLanguage" Type="int" Nullable="false" />
+          <Property Name="IDString" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errori trovati durante la generazione:
+avviso 6002: Nessuna chiave primaria definita per la tabella/visualizzazione 'W000323.dbo.UnitOfMeasures'. La chiave è stata dedotta e la definizione è stata creata come tabella/visualizzazione di sola lettura.-->
+        <EntityType Name="UnitOfMeasures">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Level" Type="int" Nullable="false" />
+          <Property Name="Mask" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Settings_DataTypes">
+          <End Role="DataTypes" Type="Self.DataTypes" Multiplicity="1" />
+          <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Settings">
+              <PropertyRef Name="IDType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tags_DataTypes">
+          <End Role="DataTypes" Type="Self.DataTypes" Multiplicity="1" />
+          <End Role="Tags" Type="Self.Tags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tags">
+              <PropertyRef Name="Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HMIModelStoreContainer">
+          <EntitySet Name="Alarms" EntityType="Self.Alarms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataTypes" EntityType="Self.DataTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Languages" EntityType="Self.Languages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Settings" EntityType="Self.Settings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Strings" EntityType="Self.Strings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tags" EntityType="Self.Tags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profiles" EntityType="Self.Profiles" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Profiles].[ID] AS [ID], 
+    [Profiles].[Name] AS [Name], 
+    [Profiles].[Level] AS [Level], 
+    [Profiles].[Mask] AS [Mask]
+    FROM [dbo].[Profiles] AS [Profiles]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TranslationMaster" EntityType="Self.TranslationMaster" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TranslationMaster].[ID] AS [ID], 
+    [TranslationMaster].[Name] AS [Name]
+    FROM [dbo].[TranslationMaster] AS [TranslationMaster]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Translations" EntityType="Self.Translations" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Translations].[ID] AS [ID], 
+    [Translations].[IDLanguage] AS [IDLanguage], 
+    [Translations].[IDString] AS [IDString], 
+    [Translations].[Text] AS [Text]
+    FROM [dbo].[Translations] AS [Translations]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UnitOfMeasures" EntityType="Self.UnitOfMeasures" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UnitOfMeasures].[ID] AS [ID], 
+    [UnitOfMeasures].[Name] AS [Name]
+    FROM [dbo].[UnitOfMeasures] AS [UnitOfMeasures]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Settings_DataTypes" Association="Self.FK_Settings_DataTypes">
+            <End Role="DataTypes" EntitySet="DataTypes" />
+            <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tags_DataTypes" Association="Self.FK_Tags_DataTypes">
+            <End Role="DataTypes" EntitySet="DataTypes" />
+            <End Role="Tags" EntitySet="Tags" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HMIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HMIEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Alarms" EntityType="HMIModel.Alarms" />
+          <EntitySet Name="DataTypes" EntityType="HMIModel.DataTypes" />
+          <EntitySet Name="Languages" EntityType="HMIModel.Languages" />
+          <EntitySet Name="Settings" EntityType="HMIModel.Settings" />
+          <EntitySet Name="Strings" EntityType="HMIModel.Strings" />
+          <EntitySet Name="Tags" EntityType="HMIModel.Tags" />
+          <EntitySet Name="Users" EntityType="HMIModel.Users" />
+          <EntitySet Name="Profiles" EntityType="HMIModel.Profiles" />
+          <EntitySet Name="TranslationMaster" EntityType="HMIModel.TranslationMaster" />
+          <EntitySet Name="Translations" EntityType="HMIModel.Translations" />
+          <EntitySet Name="UnitOfMeasures" EntityType="HMIModel.UnitOfMeasures" />
+          <AssociationSet Name="FK_Settings_DataTypes" Association="HMIModel.FK_Settings_DataTypes">
+            <End Role="DataTypes" EntitySet="DataTypes" />
+            <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tags_DataTypes" Association="HMIModel.FK_Tags_DataTypes">
+            <End Role="DataTypes" EntitySet="DataTypes" />
+            <End Role="Tags" EntitySet="Tags" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Alarms">
+          <Key>
+            <PropertyRef Name="IDString" />
+          </Key>
+          <Property Name="IDString" Type="Int32" Nullable="false" />
+          <Property Name="IDTag" Type="Int32" Nullable="false" />
+          <Property Name="Bit" Type="Int32" />
+        </EntityType>
+        <EntityType Name="DataTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Settings" Relationship="HMIModel.FK_Settings_DataTypes" FromRole="DataTypes" ToRole="Settings" />
+          <NavigationProperty Name="Tags" Relationship="HMIModel.FK_Tags_DataTypes" FromRole="DataTypes" ToRole="Tags" />
+        </EntityType>
+        <EntityType Name="Languages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Settings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IDType" Type="Int32" Nullable="false" />
+          <Property Name="Min" Type="Double" />
+          <Property Name="Max" Type="Double" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UM" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ReadOnly" Type="Boolean" Nullable="false" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="WriteToPlc" Type="Boolean" />
+          <Property Name="Format" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IDCategory" Type="Int32" />
+          <Property Name="Criteria" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DefaultValue" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DataTypes" Relationship="HMIModel.FK_Settings_DataTypes" FromRole="Settings" ToRole="DataTypes" />
+        </EntityType>
+        <EntityType Name="Strings">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="local" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="local2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Tags">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Variable" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Size" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DataTypes" Relationship="HMIModel.FK_Tags_DataTypes" FromRole="Tags" ToRole="DataTypes" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int32" Nullable="false" />
+          <Property Name="Mask" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Profiles">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Level" />
+            <PropertyRef Name="Mask" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int32" Nullable="false" />
+          <Property Name="Mask" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TranslationMaster">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Translations">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="IDLanguage" />
+            <PropertyRef Name="IDString" />
+            <PropertyRef Name="Text" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDLanguage" Type="Int32" Nullable="false" />
+          <Property Name="IDString" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UnitOfMeasures">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Settings_DataTypes">
+          <End Type="HMIModel.DataTypes" Role="DataTypes" Multiplicity="1" />
+          <End Type="HMIModel.Settings" Role="Settings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Settings">
+              <PropertyRef Name="IDType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tags_DataTypes">
+          <End Type="HMIModel.DataTypes" Role="DataTypes" Multiplicity="1" />
+          <End Type="HMIModel.Tags" Role="Tags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tags">
+              <PropertyRef Name="Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HMIModelStoreContainer" CdmEntityContainer="HMIEntities">
+          <EntitySetMapping Name="Alarms">
+            <EntityTypeMapping TypeName="HMIModel.Alarms">
+              <MappingFragment StoreEntitySet="Alarms">
+                <ScalarProperty Name="Bit" ColumnName="Bit" />
+                <ScalarProperty Name="IDTag" ColumnName="IDTag" />
+                <ScalarProperty Name="IDString" ColumnName="IDString" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataTypes">
+            <EntityTypeMapping TypeName="HMIModel.DataTypes">
+              <MappingFragment StoreEntitySet="DataTypes">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Languages">
+            <EntityTypeMapping TypeName="HMIModel.Languages">
+              <MappingFragment StoreEntitySet="Languages">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Settings">
+            <EntityTypeMapping TypeName="HMIModel.Settings">
+              <MappingFragment StoreEntitySet="Settings">
+                <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
+                <ScalarProperty Name="Criteria" ColumnName="Criteria" />
+                <ScalarProperty Name="IDCategory" ColumnName="IDCategory" />
+                <ScalarProperty Name="Format" ColumnName="Format" />
+                <ScalarProperty Name="WriteToPlc" ColumnName="WriteToPlc" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="ReadOnly" ColumnName="ReadOnly" />
+                <ScalarProperty Name="UM" ColumnName="UM" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Max" ColumnName="Max" />
+                <ScalarProperty Name="Min" ColumnName="Min" />
+                <ScalarProperty Name="IDType" ColumnName="IDType" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Strings">
+            <EntityTypeMapping TypeName="HMIModel.Strings">
+              <MappingFragment StoreEntitySet="Strings">
+                <ScalarProperty Name="local2" ColumnName="local2" />
+                <ScalarProperty Name="local" ColumnName="local" />
+                <ScalarProperty Name="EN" ColumnName="EN" />
+                <ScalarProperty Name="IT" ColumnName="IT" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tags">
+            <EntityTypeMapping TypeName="HMIModel.Tags">
+              <MappingFragment StoreEntitySet="Tags">
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Variable" ColumnName="Variable" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="HMIModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Mask" ColumnName="Mask" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profiles">
+            <EntityTypeMapping TypeName="HMIModel.Profiles">
+              <MappingFragment StoreEntitySet="Profiles">
+                <ScalarProperty Name="Mask" ColumnName="Mask" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TranslationMaster">
+            <EntityTypeMapping TypeName="HMIModel.TranslationMaster">
+              <MappingFragment StoreEntitySet="TranslationMaster">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Translations">
+            <EntityTypeMapping TypeName="HMIModel.Translations">
+              <MappingFragment StoreEntitySet="Translations">
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="IDString" ColumnName="IDString" />
+                <ScalarProperty Name="IDLanguage" ColumnName="IDLanguage" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnitOfMeasures">
+            <EntityTypeMapping TypeName="HMIModel.UnitOfMeasures">
+              <MappingFragment StoreEntitySet="UnitOfMeasures">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Nessuno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="SimpleHMI.Views.Header"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+			 
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:HeaderViewModel, IsDesignTimeCreatable=True}" 
+             
+			 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             
+			 Height="96"
+             Width="Auto" Background="White" BorderBrush="Gainsboro" BorderThickness="0,1,0,1">
+    <UserControl.Resources>
+        <conv:AlarmsCountToColorConverter x:Key="AlarmsCountToColorConverter" />
+        <conv:IntToBoolConverter x:Key="IntToBoolConverter" />
+        <conv:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <ContentControl Content="{StaticResource LogoTodema}" Grid.Column="0" HorizontalAlignment="Left" Width="199" Margin="0,-50,0,-53"></ContentControl>
+        </StackPanel>
+        <DockPanel Grid.Column="1" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ToggleButton Height="40" Style="{StaticResource btnTouchArea}" IsChecked="{Binding LoginPopupOpen}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="User" Foreground="Gray"
+                                             VerticalAlignment="Center" Width="32" Height="32"  HorizontalAlignment="Right"/>
+                        <TextBox Text="{Binding Security.CurrentUser.Name}" Foreground="Black" IsReadOnly="True" Focusable="False" 
+                                 Width="80" Height="24" Margin="5 0 5 0" BorderThickness="0" Cursor="Hand"/>
+                    </StackPanel>
+                </ToggleButton>
+
+                <Popup IsOpen="{Binding LoginPopupOpen}" x:Name="Popup" StaysOpen="False" Placement="Mouse">
+                    <Grid Background="White">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Content="Log in" Grid.Row="1" Grid.Column="0" Margin="20" Command="{Binding OpenLoginWindowCommand}"/>
+                        <Button Content="Log out" Grid.Row="1" Grid.Column="1" Margin="20" Command="{Binding LogoutCommand}"/>
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
+                    </Grid>
+                </Popup>
+
+                <Button Command="{Binding OpenErrorDocumentCommand, Mode=OneWay}" Height="40" Style="{StaticResource btnTouchArea}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Error" Foreground="Gray"
+                                             VerticalAlignment="Center" Width="32" Height="32"  HorizontalAlignment="Right"/>
+                        <TextBox Text="{Binding ErrorCode, FallbackValue=999}" Template="{StaticResource WarningsTag}" Foreground="Black" IsReadOnly="True" Focusable="False" Height="24" Margin="5 0 5 0"/>
+                    </StackPanel>
+                </Button>
+                
+                <!--
+                <Button Command="{Binding NavigateToAlarmsPageCommand, Mode=OneWay}" Height="40" Margin="10" Style="{StaticResource btnTouchArea}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Bell" Foreground="{Binding ActiveAlarms, Converter={StaticResource AlarmsCountToColorConverter}}" 
+                                             VerticalAlignment="Center" Width="32" Height="32"  HorizontalAlignment="Right"/>
+                        <TextBox Text="{Binding Alarms.ActiveAlarmsCount, FallbackValue=999, Mode=OneWay}" IsReadOnly="True"  Template="{StaticResource AlarmsTag}" Foreground="white" Focusable="False" Height="24" Margin="5,0,5,0"/>
+                    </StackPanel>
+                </Button>
+                -->
+                
+                <Button Command="{Binding PanicButtonCommand, Mode=OneWay}" Style="{StaticResource btnTouchArea}" HorizontalAlignment="Right" Width="64" Height="64">
+                    <materialDesign:PackIcon Kind="WarningCircle" Foreground="IndianRed" 
+                                         VerticalAlignment="Center" HorizontalAlignment="center"  Width="64" Height="64"/>
+                </Button>                
+                <Button Command="{Binding NavigateToSettingsPageCommand, Mode=OneWay}" Style="{StaticResource btnTouchArea}" HorizontalAlignment="Right" Width="40" Height="40" Margin="10">
+                    <materialDesign:PackIcon Kind="Gear" Foreground="Gray" 
+                                         VerticalAlignment="Center" HorizontalAlignment="center"  Width="32" Height="32" />
+                </Button>
+                <Button Command="{Binding QuitCommand, Mode=OneWay}" Style="{StaticResource btnTouchArea}" HorizontalAlignment="Right" Width="40" Height="40" Margin="10">
+                    <materialDesign:PackIcon Kind="ExitToApp" Foreground="Gray" 
+                                         VerticalAlignment="Center" HorizontalAlignment="center"  Width="32" Height="32" />
+                </Button>
+                <StackPanel Orientation="Vertical" Background="#FFF">
+                    <Button  Command="{Binding ChangeLanguageCommand}" CommandParameter="ITA"  Style="{StaticResource btnTouchArea}" Width="32" Height="32" Margin="0">
+                        <Border BorderBrush="Silver" BorderThickness="1" Padding="1">
+                            <ContentControl Content="{StaticResource Flags_IT}"/>
+                        </Border>
+                    </Button>
+                    <Button Command="{Binding ChangeLanguageCommand}" CommandParameter="ENG"  Style="{StaticResource btnTouchArea}" Width="32" Height="32" Margin="0">
+                        <Border BorderBrush="Silver" BorderThickness="1" Padding="1">
+                            <ContentControl Content="{StaticResource Flags_GB}" />
+                        </Border>
+                    </Button>
+                    <Button Command="{Binding ChangeLanguageCommand}" CommandParameter="ESP"  Style="{StaticResource btnTouchArea}" Width="32" Height="32" Margin="0">
+                        <Border BorderBrush="Silver" BorderThickness="1" Padding="1">
+                            <ContentControl Content="{StaticResource Flags_ES}" />
+                        </Border>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="SimpleHMI.Controls.Navigator"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             DataContext="{Binding}">
+    <StackPanel Orientation="Horizontal">
+        <!-- Pages navigation -->
+        <Button Grid.Row="1" Grid.Column="0" Command="{Binding PreviousPageCommand}" Width="60" HorizontalAlignment="Right" IsEnabled="{Binding CanMovePrev}">
+            <materialDesign:PackIcon Kind="ArrowLeft" />
+        </Button>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding CurrentPage}" VerticalAlignment="Center" MinWidth="20"/>
+            <Label Content="/" />
+            <TextBlock Text="{Binding NumPages}" VerticalAlignment="Center"  MinWidth="20"/>
+        </StackPanel>
+        <Button Grid.Row="1" Grid.Column="2" Command="{Binding NextPageCommand}" Width="60" HorizontalAlignment="Left" IsEnabled="{Binding CanMoveNext}">
+            <materialDesign:PackIcon Kind="ArrowRight" />
+        </Button>
+    </StackPanel>
+</UserControl>

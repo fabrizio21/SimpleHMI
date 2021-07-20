@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="SimpleHMI.Controls.JogAxisModePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:ctrls="clr-namespace:SimpleHMI.Controls"
+             
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:MainPageViewModel, IsDesignTimeCreatable=True}"
+
+             Background="White" Padding="10">
+    <UserControl.Resources>
+        <conv:BitwiseConverter x:Key="BitwiseConverter" />
+        <conv:IntToBoolConverter x:Key="IntToBoolConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="{Binding Translation[Axis],FallbackValue='Axis'}" Grid.Row="0" Grid.Column="0" Style="{StaticResource GridHeader}"/>
+        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="{Binding Translation[Speed],FallbackValue='Speed m/s'}" Grid.Row="0" Grid.Column="1" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="" Grid.Row="0" Grid.Column="2" Style="{StaticResource GridHeader}"/>
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="" Grid.Row="0" Grid.Column="3" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderCell}" />
+
+        <TextBlock Text="" Grid.Row="0" Grid.Column="4" Style="{StaticResource GridHeader}" />
+        <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderCell}" />
+
+        <Border BorderBrush="LightGray" Grid.Row="1" Grid.ColumnSpan="5" BorderThickness="1"/>
+
+        <!-- Column 0 selection -->
+        <CheckBox Grid.Row="1" Grid.Column="0" Style="{StaticResource AxisCheckBox}" Content="X" 
+                  Command="{Binding JogAxisToggleBitCommand}" CommandParameter="0"
+                  IsChecked="{Binding JogAxisControlWord, Converter={StaticResource BitwiseConverter}, ConverterParameter=0, Mode=OneWay}"/>
+
+        <CheckBox Grid.Row="2" Grid.Column="0" Style="{StaticResource AxisCheckBox}" Content="Y" 
+                  Command="{Binding JogAxisToggleBitCommand}" CommandParameter="1"
+                  IsChecked="{Binding JogAxisControlWord, Converter={StaticResource BitwiseConverter}, ConverterParameter=1, Mode=OneWay}"/>
+
+        <CheckBox Grid.Row="3" Grid.Column="0" Style="{StaticResource AxisCheckBox}" Content="Rot" 
+                  Command="{Binding JogAxisToggleBitCommand}" CommandParameter="2"
+                  IsChecked="{Binding JogAxisControlWord, Converter={StaticResource BitwiseConverter}, ConverterParameter=2, Mode=OneWay}"/>
+
+        <!-- Column 1 Speed -->
+        <ctrls:NumericInput Grid.Row="1" Grid.Column="1" 
+                            Culture="{Binding Translation.CultureInfo}"
+                            Value="{Binding AxisList.A0.SetJogSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Maximum="{Binding AxisList.A0.MaxSpeed}" 
+                            Minimum="{Binding AxisList.A0.SlowSpeed}"
+                            Style="{StaticResource NumericInputSet}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="ValueChanged">
+                    <prism:InvokeCommandAction Command="{Binding WriteXJogSpeedCommand}" CommandParameter="{Binding AxisList.A0.SetJogSpeed}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ctrls:NumericInput>
+
+        <ctrls:NumericInput Grid.Row="2" Grid.Column="1" 
+                            Culture="{Binding Translation.CultureInfo}"
+                            Value="{Binding AxisList.A1.SetJogSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Maximum="{Binding AxisList.A1.MaxSpeed}" 
+                            Minimum="{Binding AxisList.A1.SlowSpeed}"
+                            Style="{StaticResource NumericInputSet}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="ValueChanged">
+                    <prism:InvokeCommandAction Command="{Binding WriteYJogSpeedCommand}" CommandParameter="{Binding AxisList.A1.SetJogSpeed}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ctrls:NumericInput>
+
+        <ctrls:NumericInput Grid.Row="3" Grid.Column="1" 
+                            Culture="{Binding Translation.CultureInfo}"
+                            Value="{Binding AxisList.A2.SetJogSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Maximum="{Binding AxisList.A2.MaxSpeed}" 
+                            Minimum="{Binding AxisList.A2.SlowSpeed}"
+                            Style="{StaticResource NumericInputSet}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="ValueChanged">
+                    <prism:InvokeCommandAction Command="{Binding WriteRotJogSpeedCommand}" CommandParameter="{Binding AxisList.A2.SetJogSpeed}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ctrls:NumericInput>
+
+        <!-- Column 2 Jog + -->
+        <Button Style="{StaticResource btnRounded}" Content="{Binding Translation[JogPlus],FallbackValue=Jog +}" 
+                Grid.Row="1" Grid.RowSpan="3" Grid.Column="2" HorizontalAlignment="Center" Height="60" Width="80">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                    <prism:InvokeCommandAction Command="{Binding JogAxisMouseDownCommand}" CommandParameter="+" />
+                </b:EventTrigger>
+                <b:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <prism:InvokeCommandAction Command="{Binding JogAxisMouseUpCommand}" CommandParameter="+" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </Button>
+
+        <!-- Column 3 Jog - -->
+        <Button Style="{StaticResource btnRounded}" Content="{Binding Translation[JogMinus],FallbackValue=Jog -}" 
+                Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" HorizontalAlignment="Center" Height="60" Width="80">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                    <prism:InvokeCommandAction Command="{Binding JogAxisMouseDownCommand}" CommandParameter="-" />
+                </b:EventTrigger>
+                <b:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <prism:InvokeCommandAction Command="{Binding JogAxisMouseUpCommand}" CommandParameter="-" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </Button>
+
+        <!-- Column 4 Back to home -->
+        <Button Style="{StaticResource btnRounded}" 
+                Grid.Row="1" Grid.RowSpan="3" Grid.Column="4" HorizontalAlignment="Center" Height="60" Width="80"
+                Command="{Binding JogAxisBackToHomeCommand}">
+            <TextBlock Text="{Binding Translation[BackToHome],FallbackValue='Back to Home'}" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+        </Button>
+        
+    </Grid>
+</UserControl>

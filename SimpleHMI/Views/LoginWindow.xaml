@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="SimpleHMI.Views.LoginWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:LoginWindowViewModel, IsDesignTimeCreatable=True}"
+             
+             Background="#80000000"
+             
+              MaxWidth="450" MaxHeight="205"
+             >
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="NoResize"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <UserControl.Resources>
+        <conv:ButtonTextToVisibilityConverter x:Key="ButtonTextToVisibilityConverter" />
+        <conv:EnumDialogWindowModeToPackIconKindConverter x:Key="EnumDialogWindowModeToPackIconKindConverter" />
+        <conv:EnumDialogWindowModeToColorConverter x:Key="EnumDialogWindowModeToColorConverter" />
+        <conv:EnumDialogWindowModeToVisibilityConverter x:Key="EnumDialogWindowModeToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Margin="0" Background="Gainsboro"  MaxWidth="450" MaxHeight="205" FocusManager.FocusedElement="{Binding ElementName=txtUser}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="55" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Grid.ColumnSpan="3" Margin="2,2,2,2" Background="White">
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0">
+                <materialDesign:PackIcon Kind="Lock" 
+                                         Foreground="Gray"  
+                                         Width="80" Height="80" Margin="25,0,0,0" VerticalAlignment="Center" 
+                                          />
+                <StackPanel>
+                    <Label Content="Username:" Margin="30 10 30 0"/>
+                    <TextBox x:Name="txtUser" Text="{Binding UserName}" TextWrapping="Wrap" Margin="30 0" FontSize="14" Width="240" VerticalAlignment="Center" TabIndex="0"/>
+                    <Label Content="Password:" Margin="30 10 30 0"/>
+                    <PasswordBox x:Name="txtPwd" VerticalAlignment="center" Margin="30 0" FontSize="14" PasswordChanged="txtPwd_PasswordChanged" TabIndex="1"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Button Style="{StaticResource btnDialog}" Command="{Binding LoginCommand}" Width="100" Height="Auto"
+                Grid.Row="1" Grid.Column="0" 
+                Content="{Binding MessageOk}"
+                IsDefault="True"
+                TabIndex="2"/>
+        <Button Style="{StaticResource btnDialog}" Command="{Binding CancelCommand}" Width="100" Height="Auto" 
+                Grid.Row="1" Grid.Column="2" 
+                Content="{Binding MessageCancel}"
+                TabIndex="3"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="SimpleHMI.Views.SideBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:conv="clr-namespace:SimpleHMI.Converters"
+
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:SimpleHMI.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:SideBarViewModel, IsDesignTimeCreatable=True}"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             
+             Height="Auto" Width="Auto" Background="#333"
+             >
+    <UserControl.Resources>
+        <conv:IntToBoolConverter x:Key="IntToBoolConverter" />
+        <conv:CtrlStateToBooleanConverter x:Key="CtrlStateToBooleanConverter" />
+        <conv:ModeToButtonColorConverter x:Key="ModeToButtonColorConverter" />
+        <conv:ModeToBooleanConverter x:Key="ModeToBooleanConverter" />
+        <conv:ModeStateToStringConverter x:Key="ModeStateToStringConverter" />
+        <conv:StringToUpperConverter x:Key="StringToUpperConverter" />
+
+        <Style x:Key="ModeTextBox" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0 5" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Resources>
+    
+    <StackPanel Margin="0">
+        <!-- State panel -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0">
+
+            <Button Style="{StaticResource btnMenu}"  Margin="0,5,0,0" Command="{Binding Path=EnableCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlState, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=1}" 
+                    Content="{Binding Translation[Enable], FallbackValue='Enable'}">
+            </Button>
+
+            <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=DisableCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlState, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=0}" 
+                    Content="{Binding Translation[Disable], FallbackValue='Disable'}">
+            </Button>
+
+            <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=ResetErrorCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlState, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=2}" 
+                    Content="{Binding Translation[ResetError], FallbackValue='Reset Error'}">
+            </Button>
+
+            <ToggleButton Style="{StaticResource btnMenu}" Margin="0,5,0,0" 
+                          Command="{Binding Path=DemoModeCommand, Mode=OneWay}" CommandParameter="{Binding DemoState}" 
+                          IsChecked="{Binding DemoState}" Content="{Binding T[Demo], FallbackValue='Demo'}" >
+            </ToggleButton>
+        </StackPanel>
+
+
+        <!-- Mode panel -->
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 10">
+            <TextBlock Style="{StaticResource ModeTextBox}">
+                <TextBlock.Text>
+                    <MultiBinding TargetNullValue="" FallbackValue="">
+                        <MultiBinding.Converter>
+                            <conv:ModeStateToStringConverter/>
+                        </MultiBinding.Converter>
+                        <Binding Path="Translation"/>
+                        <Binding Path="ModeState"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=JogAxisModeCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlMode, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=1}"
+                    Content="{Binding Translation[JogAxis], FallbackValue='Jog Axis'}">
+            </Button>
+
+            <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=MoveAxisModeCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlMode, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=2}"
+                    Content="{Binding Translation[MoveAxis], FallbackValue='Move Axis'}">
+
+            </Button>
+
+            <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=IntRefModeCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlMode, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=3}"
+                    Content="{Binding Translation[IntRef], FallbackValue='Int Ref'}">
+            </Button>
+
+            <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=ExtRefModeCommand, Mode=OneWay}"
+                    Selector.IsSelected="{Binding CtrlMode, Converter={StaticResource ModeToBooleanConverter}, ConverterParameter=4}"
+                    Content="{Binding Translation[ExtRef], FallbackValue='Ext Ref'}">
+            </Button>
+
+        </StackPanel>
+
+
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0" Visibility="Hidden">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" >
+                <Button Style="{StaticResource btnMenu}" Margin="0,10,0,0"  Command="{Binding Path=NavigateToMainPageCommand, Mode=OneWay}" >
+                    <StackPanel Orientation="Horizontal" Width="180">
+                        <materialDesign:PackIcon Kind="Home" Width="24" Height="24" Margin="5,0,0,0"/>
+                        <TextBlock Text="{Binding Translation[Home], FallbackValue='Home', Mode=TwoWay}" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=NavigateToAlarmsPageCommand, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Width="180" >
+                        <materialDesign:PackIcon Kind="Bell" Width="24" Height="24" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Translation[Alarms], FallbackValue='Alarms'}" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource btnMenu}"  Margin="0,5,0,0" Command="{Binding Path=NavigateToSettingsPageCommand, Mode=OneWay}" >
+                    <StackPanel Orientation="Horizontal" Width="180">
+                        <materialDesign:PackIcon Kind="Gear" Width="24" Height="24" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Translation[Settings], FallbackValue='Settings'}" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding Path=NavigateToIoPageCommand}">
+                    <StackPanel Orientation="Horizontal" Width="180" >
+                        <materialDesign:PackIcon Kind="ToggleSwitchOffOutline" Width="24" Height="24" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Translation[IO], FallbackValue='I/O'}" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0" Command="{Binding}">
+                    <StackPanel Orientation="Horizontal" Width="180" >
+                        <materialDesign:PackIcon Kind="Users" Width="24" Height="24" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Translation[Users], FallbackValue='Users'}" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource btnMenu}" Margin="0,5,0,0">
+                    <StackPanel Orientation="Horizontal" Width="180">
+                        <materialDesign:PackIcon Kind="ExitToApp" Width="24" Height="24" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Translation[Quit], FallbackValue='Quit'}" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                    </StackPanel>
+                </Button>
+
+
+
+
+            </StackPanel>
+        </StackPanel>
+        
+        
+        
+    </StackPanel>
+</UserControl>
